@@ -1,4 +1,3 @@
-
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthService } from './auth.service';
@@ -10,6 +9,4 @@ import { User } from 'src/user/user.model';
   providers: [AuthService],
   controllers: [AuthController],
 })
-export class AuthModule {
-  
-}
+export class AuthModule {}
