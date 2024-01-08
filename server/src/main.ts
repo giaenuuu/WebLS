@@ -21,7 +21,7 @@ async function bootstrap() {
   app.use(
     cookieParser('TODO_PLEASE_CHANGE_LOCATION_OF_TOKEN'),
     cookieSession({
-      name: 'webls_session',
+      name: 'webls_session', // go change at logout
       keys: ['TODO_PLEASE_CHANGE_LOCATION_OF_TOKEN'],
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       httpOnly: true,
