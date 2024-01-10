@@ -1,7 +1,15 @@
-import { Body, Controller, Post, Request, Response } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Request,
+  Response,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserInput } from 'src/user/user.input.model';
 import * as uuid from 'uuid';
+import { AuthGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -40,6 +48,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @UseGuards(AuthGuard)
   async logout(@Request() req, @Response() res): Promise<void> {
     req.session = null;
     // Clear session cookie on the client

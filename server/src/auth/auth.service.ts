@@ -87,17 +87,6 @@ export class AuthService {
     return hashedUserInputPassword === storedHashedPassword;
   }
 
-  private extractCredentialsFromAuthHeader(authHeader: string): Credentials {
-    // Extract the base64-encoded credentials part from the Authorization header
-    const encodedCredentials = authHeader.split(' ')[1];
-    // Decode the base64-encoded credentials
-    const decodedCredentials = base64.decode(encodedCredentials);
-    // Extract username and password
-    const [username, password] = decodedCredentials.split(':');
-
-    return { username, password };
-  }
-
   private generateHash(data: string): string {
     const hash = crypto.createHash('sha256');
     hash.update(data);
