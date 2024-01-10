@@ -4,8 +4,7 @@ import { User } from 'src/user/user.model';
 import { authConfig } from 'src/globals';
 import { InjectModel } from '@nestjs/sequelize';
 import * as base64 from 'base-64';
-
-const bcrypt = require('bcrypt');
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -33,32 +32,35 @@ export class AuthService {
     });
   }
 
-  public async authenticateUser(authHeader: string) {
-    const unauthorizedException = new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+  public async authenticateUser(userInput: UserInput): Promise<User> {
+    const unauthorizedException = new HttpException(
+      'Unauthorized',
+      HttpStatus.UNAUTHORIZED,
+    );
 
-    if (!authHeader || !authHeader.startsWith('Basic ')) {
-      throw unauthorizedException; 
+    if (!userInput || !userInput.username || !userInput.password) {
+      throw unauthorizedException;
     }
 
-    const credentials = this.extractCredentialsFromAuthHeader(authHeader);
-
     const user = await this.userModel.findOne({
-      where: { username: credentials.username },
+      where: { username: userInput.username },
     });
 
     if (!user) {
-      throw unauthorizedException; 
+      throw unauthorizedException;
     }
 
-    const isValid = this.verifyPassword(
-      credentials.password,
+    const passwordMatch = this.verifyPassword(
+      userInput.password,
       user.password_hash,
       user.password_salt,
     );
 
-    if(!isValid){
+    if (!passwordMatch) {
       throw unauthorizedException;
     }
+
+    return user;
   }
 
   // Chat GPT function. Is used so we don't need more packages
@@ -73,24 +75,21 @@ export class AuthService {
 
   private hashPassword(password, salt) {
     const combined = password + salt;
-    const hashedPassword = bcrypt.hashSync(combined, authConfig.saltRounds);
+    const hashedPassword = this.generateHash(combined);
     return hashedPassword;
   }
 
   private verifyPassword(userInputPassword, storedHashedPassword, storedSalt) {
-    const combined = userInputPassword + storedSalt;
-    const hashedUserInputPassword = bcrypt.hashSync(combined, 10);
+    const hashedUserInputPassword = this.hashPassword(
+      userInputPassword,
+      storedSalt,
+    );
     return hashedUserInputPassword === storedHashedPassword;
   }
 
-  private extractCredentialsFromAuthHeader(authHeader: string): Credentials {
-    // Extract the base64-encoded credentials part from the Authorization header
-    const encodedCredentials = authHeader.split(' ')[1];
-    // Decode the base64-encoded credentials
-    const decodedCredentials = base64.decode(encodedCredentials);
-    // Extract username and password
-    const [username, password] = decodedCredentials.split(':');
-
-    return { username, password };
+  private generateHash(data: string): string {
+    const hash = crypto.createHash('sha256');
+    hash.update(data);
+    return hash.digest('hex');
   }
 }
