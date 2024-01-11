@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Response, UseGuards } from '@nestjs/common';
 import { FilesystemObjectService } from './filesystem-object.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { FilesystemObjectInput } from './filesystem-object-input.interface';
+import { FilesystemObjectInput } from './filesystem-object-input.dto';
 
 @Controller('filesystem')
 export class FilesystemObjectController {
