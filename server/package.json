@@ -27,6 +27,8 @@
     "@types/express-session": "^1.17.10",
     "base-64": "^1.0.0",
     "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.0.0",
     "express-session": "^1.17.3",
