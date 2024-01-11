@@ -1,3 +1,5 @@
+import { FilesystemObjectType } from './filesystem-object-type.enum';
+
 export interface FilesystemObjectView {
   objects: FilesystemObject[];
 }
@@ -7,10 +9,4 @@ export interface FilesystemObject {
   name: string;
   size: number;
   lastModifiedOn: Date;
-}
-
-export enum FilesystemObjectType {
-  FILE,
-  DIRECTORY,
-  EXECUTABLE,
 }

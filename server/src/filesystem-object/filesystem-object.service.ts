@@ -2,15 +2,12 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { skip } from 'node:test';
 import { exec } from 'child_process';
 import { validateOrReject } from 'class-validator';
-import {
-  FilesystemObjectInput,
-  Sorting,
-} from './filesystem-object-input.interface';
+import { FilesystemObjectInput, Sorting } from './filesystem-object-input.dto';
 import {
   FilesystemObject,
-  FilesystemObjectType,
   FilesystemObjectView,
-} from './filesystem-object-view.interface';
+} from './filesystem-object-view.dto';
+import { FilesystemObjectType } from './filesystem-object-type.enum';
 
 @Injectable()
 export class FilesystemObjectService {
