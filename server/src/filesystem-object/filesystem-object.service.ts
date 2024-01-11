@@ -21,7 +21,7 @@ export class FilesystemObjectService {
     }
 
     const basePath = '/home/bryan';
-    const blackList = ['../', '..'];
+    const blackList = ['../', '..', ';'];
     if (
       !filesystemObjectInput.path.startsWith(basePath) ||
       blackList.some((item) => filesystemObjectInput.path.includes(item))
