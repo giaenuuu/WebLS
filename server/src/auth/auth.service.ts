@@ -1,10 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UserInput } from 'src/user/user.input.model';
 import { User } from 'src/user/user.model';
-import { authConfig } from 'src/globals';
 import { InjectModel } from '@nestjs/sequelize';
-import * as base64 from 'base-64';
 import * as crypto from 'crypto';
+import { UserInput } from 'src/user/user-input.dto';
 
 @Injectable()
 export class AuthService {

@@ -6,6 +6,7 @@ import { User } from './user/user.model';
 import { UsersModule } from './user/users.module';
 import { AuthModule } from './auth/auth.module';
 import { FilesystemObjectModule } from './filesystem-object/filesystem-object.module';
+import { CustomLogger } from './logger/logger.service';
 
 @Module({
   imports: [
@@ -25,6 +26,6 @@ import { FilesystemObjectModule } from './filesystem-object/filesystem-object.mo
     FilesystemObjectModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, CustomLogger],
 })
 export class AppModule {}

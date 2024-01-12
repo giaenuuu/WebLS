@@ -4,10 +4,13 @@ import * as session from 'express-session';
 import * as cookieParser from 'cookie-parser';
 import * as cookieSession from 'cookie-session';
 import { ValidationPipe } from '@nestjs/common';
+import { CustomLogger } from './logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
+  const customLogger = app.get(CustomLogger);
+  app.useLogger(customLogger);
   app.useGlobalPipes(new ValidationPipe());
   // app.use(cookieParser(), session({
   //   name: 'WEBLS_SESSION',

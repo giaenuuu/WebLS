@@ -1,3 +1,3 @@
 export const authConfig = {
-    saltRounds: 10,
-}
+  saltRounds: 10,
+};
