@@ -13,24 +13,25 @@ export class FilesystemObjectController {
     @Body() body: FilesystemObjectInput,
     @Response() res,
   ): Promise<void> {
-    if (await this.filesystemObjectService.isRequestBodyValid(body)) {
+    if (await this.filesystemObjectService.isRequestBodyValid(body, res)) {
       try {
         const filesystemObjects =
           await this.filesystemObjectService.getFileSystemObjects(body);
 
         res
           .status(200)
-          .json({ message: 'Request successful', filesystemObjects });
+          .json({ 
+            filesystemObjects,
+            message: 'Request successful',
+            statusCode: '200',
+          });
       } catch (err) {
         res.status(500).json({
-          message:
-            'Internal Server Error: Error occured while performing the request',
+          message: 'A unknown error occured while performing the request',
+          error: 'Internal Server Error',
+          statusCode: '500'
         });
       }
-    } else {
-      res.status(400).json({
-        message: 'Bad Request: Invalid request body',
-      });
     }
   }
 }

@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { skip } from 'node:test';
 import { exec } from 'child_process';
 import { validateOrReject } from 'class-validator';
 import { FilesystemObjectInput, Sorting } from './filesystem-object-input.dto';
@@ -8,24 +7,50 @@ import {
   FilesystemObjectType,
   FilesystemObjectView,
 } from './filesystem-object-view.dto';
+import * as quote from 'shell-quote';
+import * as fs from 'fs';
 
 @Injectable()
 export class FilesystemObjectService {
   public async isRequestBodyValid(
     filesystemObjectInput: FilesystemObjectInput,
-  ) {
+    res
+  ) : Promise<boolean> {
     try {
       await validateOrReject(filesystemObjectInput);
     } catch (errors) {
+      res.status(400).json({
+        message: 'Invalid request body',
+        error: 'Bad Request',
+        statusCode: '400'
+      });
       return false;
     }
 
     const basePath = '/home/bryan';
-    const blackList = ['../', '..', ';'];
+    const blackList = ['./', '../', '..', ";", "//", "#", "\\", "'", `"`, "`" ];
     if (
       !filesystemObjectInput.path.startsWith(basePath) ||
       blackList.some((item) => filesystemObjectInput.path.includes(item))
     ) {
+      res.status(400).json({
+        message: 'Invalid path',
+        error: 'Bad Request',
+        statusCode: '400'
+      });
+      return false;
+    }
+
+    //escape path
+    filesystemObjectInput.path = quote.quote([`${filesystemObjectInput.path}`]);
+    try {
+      fs.accessSync(filesystemObjectInput.path, fs.constants.F_OK);
+    } catch (errors) {
+      res.status(400).json({
+        message: `Path doesn't exist`,
+        error: 'Bad Request',
+        statusCode: '400'
+      });
       return false;
     }
 
@@ -50,18 +75,9 @@ export class FilesystemObjectService {
 
       return this.bashOutputToFilesystemObjectView(stdout);
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
-          error:
-            'Internal Server Error: Error occured while executing the command',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw '';
     }
   }
-
-  invalidEndings = ['=>', '=', '>', '@', '|', '..', '../', './'];
 
   private getSortingFlag(sorting: Sorting): string {
     switch (sorting) {
@@ -97,14 +113,15 @@ export class FilesystemObjectService {
   ): FilesystemObjectView {
     const lines = output.trim().split('\n').slice(1);
     const filesystemObjects: FilesystemObject[] = [];
+    const invalidEndings = ['=>', '=', '>', '@', '|', '..', '../', './'];
 
     lines.forEach((line) => {
       var [permissions, links, owner, group, size, date, time, utc, name] = line
         .trim()
         .split(/\s+/);
 
-      if (this.invalidEndings.some((ending) => name.endsWith(ending))) {
-        skip;
+      if (invalidEndings.some((ending) => name.endsWith(ending))) {
+        return;
       }
 
       var type: FilesystemObjectType;

@@ -27,14 +27,16 @@ export class AuthController {
       await validateOrReject(body);
     } catch (errors) {
       res.status(400).json({
-        message: 'Bad Request: Invalid request body',
+        message: 'Invalid request body',
+        error: 'Bad Request',
+        statusCode: '400'
       });
       return;
     }
 
     if (req.session && req.session.user) {
       // Return the existing session without creating a new one
-      res.status(200).json({ message: 'Session already exists' });
+      res.status(200).json({ message: 'Session already exists', statusCode: '200' });
       return;
     }
 
@@ -46,23 +48,30 @@ export class AuthController {
       // Set session data, including the token
       req.session.user = { ...user, sessionToken };
 
-      res.status(200).json({ message: 'Login successful' });
+      res.status(200).json({ message: 'Login successful', statusCode: '200' });
     } else {
       res.status(401).json({
         message: 'Invalid credentials',
+        error: 'Unauthorized',
+        statusCode: '401'
       });
     }
   }
 
   @Post('/register')
-  public async register(@Body() userInput: UserInput): Promise<void> {
+  public async register(@Body() userInput: UserInput, @Response() res): Promise<void> {
     try {
       await validateOrReject(userInput);
     } catch (errors) {
+      res.status(400).json({
+        message: 'Invalid request body',
+        error: 'Bad Request',
+        statusCode: '400'
+      });
       return;
     }
 
-    this.authService.createUser(userInput);
+    this.authService.createUser(userInput, res);
     return;
   }
 
@@ -73,6 +82,6 @@ export class AuthController {
     // Clear session cookie on the client
     res.clearCookie('webls_session');
 
-    res.status(200).json({ message: 'Logout successful' });
+    res.status(200).json({ message: 'Logout successful', statusCode: '200' });
   }
 }
