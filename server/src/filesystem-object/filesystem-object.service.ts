@@ -9,6 +9,8 @@ import {
 } from './filesystem-object-view.dto';
 import * as quote from 'shell-quote';
 import * as fs from 'fs';
+import * as dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 @Injectable()
 export class FilesystemObjectService {
@@ -27,7 +29,7 @@ export class FilesystemObjectService {
       return false;
     }
 
-    const basePath = '/home/bryan';
+    const basePath = process.env.LOCAL_PATH_HOME_DIR;
     const blackList = ['./', '../', '..', ";", "//", "#", "\\", "'", `"`, "`" ];
     if (
       !filesystemObjectInput.path.startsWith(basePath) ||

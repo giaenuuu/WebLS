@@ -1,5 +1,7 @@
 import { Injectable, LogLevel, Logger, LoggerService } from '@nestjs/common';
 import * as fs from 'fs';
+import * as dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 @Injectable()
 export class CustomLogger implements LoggerService {
@@ -51,7 +53,7 @@ export class CustomLogger implements LoggerService {
   }
 
   private writeToFile(filename: string, content: string): void {
-    var path = '/home/bryan/logs';
+    var path = process.env.LOCAL_PATH_LOGS;
     fs.appendFileSync(`${path}/${filename}`, `${content}\n`);
   }
 
