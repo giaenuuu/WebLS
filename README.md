@@ -19,7 +19,7 @@ Welcome to the WebLS project repository for the [GIBB](https://gibb.ch/) Module 
 
 - `npm install` in `./WebLS/server` and `./WebLS/client`
 - `npm run start` to run the server `./WebLS/server`
-- `npm start` to the frontend `./WebLS/client`
+- `npm start` to run the frontend `./WebLS/client`
 
 <hr>
 <p align="center"><a href="https://github.com/giaenuuu/WebLS/blob/master/LICENSE"><img src="https://img.shields.io/static/v1.svg?label=License&message=MIT&colorA=363a4f&colorB=b2aaff&style=for-the-badge"/></a></p>
