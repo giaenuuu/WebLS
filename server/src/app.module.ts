@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
+import * as dotenv from 'dotenv';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { User } from './user/user.model';
-import { UsersModule } from './user/users.module';
 import { AuthModule } from './auth/auth.module';
 import { FilesystemObjectModule } from './filesystem-object/filesystem-object.module';
+import { ApiModule } from './global/global.module';
 import { CustomLogger } from './logger/logger.service';
-import * as dotenv from 'dotenv';
+import { User } from './user/user.model';
+import { UsersModule } from './user/users.module';
 dotenv.config({ path: '.env.local' });
 
 @Module({
@@ -25,6 +26,7 @@ dotenv.config({ path: '.env.local' });
     }),
     UsersModule,
     AuthModule,
+    ApiModule,
     FilesystemObjectModule,
   ],
   controllers: [AppController],

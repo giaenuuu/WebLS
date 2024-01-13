@@ -6,15 +6,19 @@ import {
   Response,
   UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import * as uuid from 'uuid';
-import { AuthGuard } from './auth.guard';
 import { validateOrReject } from 'class-validator';
+import { authConfig } from 'src/globals';
 import { UserInput } from 'src/user/user-input.dto';
+import { SessionService } from '../global/session.service';
+import { AuthGuard } from './auth.guard';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private sessionService: SessionService,
+  ) {}
 
   @Post('login')
   async login(
@@ -29,44 +33,55 @@ export class AuthController {
       res.status(400).json({
         message: 'Invalid request body',
         error: 'Bad Request',
-        statusCode: '400'
+        statusCode: '400',
       });
       return;
     }
 
-    if (req.session && req.session.user) {
+    const requestSession = this.sessionService.getSessionFromRequest(req);
+
+    if (requestSession && this.sessionService.getSession(requestSession)) {
       // Return the existing session without creating a new one
-      res.status(200).json({ message: 'Session already exists', statusCode: '200' });
+      res
+        .status(200)
+        .json({ message: 'Session already exists', statusCode: '200' });
       return;
     }
 
     const user = await this.authService.authenticateUser(userInput);
     if (user) {
-      // Generate a unique session token
-      const sessionToken = uuid.v4();
+      const sessionId = this.sessionService.createSession(user.id);
+      res.cookie(authConfig.sessionCookieName, sessionId, {
+        maxAge: authConfig.sessionExpiresAfterMS,
+        httpOnly: true,
+      });
 
-      // Set session data, including the token
-      req.session.user = { ...user, sessionToken };
-
-      res.status(200).json({ message: 'Login successful', statusCode: '200' });
+      res.status(200).json({
+        message: 'Login successful',
+        user: { userId: user.id, username: user.username },
+      });
     } else {
       res.status(401).json({
         message: 'Invalid credentials',
         error: 'Unauthorized',
-        statusCode: '401'
+        statusCode: '401',
       });
     }
   }
 
   @Post('/register')
-  public async register(@Body() userInput: UserInput, @Response() res): Promise<void> {
+  @UseGuards(AuthGuard)
+  public async register(
+    @Body() userInput: UserInput,
+    @Response() res,
+  ): Promise<void> {
     try {
       await validateOrReject(userInput);
     } catch (errors) {
       res.status(400).json({
         message: 'Invalid request body',
         error: 'Bad Request',
-        statusCode: '400'
+        statusCode: '400',
       });
       return;
     }
@@ -77,11 +92,10 @@ export class AuthController {
 
   @Post('logout')
   @UseGuards(AuthGuard)
-  async logout(@Request() req, @Response() res): Promise<void> {
-    req.session = null;
-    // Clear session cookie on the client
-    res.clearCookie('webls_session');
-
-    res.status(200).json({ message: 'Logout successful', statusCode: '200' });
+  async logout(@Request() req: any, @Response() res): Promise<void> {
+    const session = this.sessionService.getSessionFromRequest(req);
+    this.sessionService.removeSession(session);
+    res.clearCookie(authConfig.sessionCookieName);
+    res.status(200).json({ message: 'Logout successful' });
   }
 }
