@@ -38,7 +38,9 @@ export class AuthController {
       return;
     }
 
-    if (req.session && req.session.user) {
+    const requestSession = this.sessionService.getSessionFromRequest(req);
+
+    if (requestSession && this.sessionService.getSession(requestSession)) {
       // Return the existing session without creating a new one
       res
         .status(200)
