@@ -6,9 +6,9 @@ import {
   Response,
   UseGuards,
 } from '@nestjs/common';
-import { Response as Res } from 'express';
+import { validateOrReject } from 'class-validator';
 import { authConfig } from 'src/globals';
-import { UserInput } from 'src/user/user.input.model';
+import { UserInput } from 'src/user/user-input.dto';
 import { SessionService } from '../global/session.service';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
@@ -21,12 +21,28 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  async login(@Request() req, @Response() res: Res): Promise<void> {
-    const userInput = req.body;
-    const userSession = this.sessionService.getSessionFromRequest(req);
+  async login(
+    @Request() req,
+    @Body() body: UserInput,
+    @Response() res,
+  ): Promise<void> {
+    try {
+      var userInput: UserInput = body;
+      await validateOrReject(body);
+    } catch (errors) {
+      res.status(400).json({
+        message: 'Invalid request body',
+        error: 'Bad Request',
+        statusCode: '400',
+      });
+      return;
+    }
 
-    if (this.sessionService.getSession(userSession)) {
-      res.status(200).json({ message: 'Session already exists' });
+    if (req.session && req.session.user) {
+      // Return the existing session without creating a new one
+      res
+        .status(200)
+        .json({ message: 'Session already exists', statusCode: '200' });
       return;
     }
 
@@ -43,14 +59,32 @@ export class AuthController {
         user: { userId: user.id, username: user.username },
       });
     } else {
-      res.status(401).json({ message: 'Invalid credentials' });
+      res.status(401).json({
+        message: 'Invalid credentials',
+        error: 'Unauthorized',
+        statusCode: '401',
+      });
     }
   }
 
   @Post('/register')
   @UseGuards(AuthGuard)
-  public async register(@Body() userInput: UserInput): Promise<void> {
-    this.authService.createUser(userInput);
+  public async register(
+    @Body() userInput: UserInput,
+    @Response() res,
+  ): Promise<void> {
+    try {
+      await validateOrReject(userInput);
+    } catch (errors) {
+      res.status(400).json({
+        message: 'Invalid request body',
+        error: 'Bad Request',
+        statusCode: '400',
+      });
+      return;
+    }
+
+    this.authService.createUser(userInput, res);
     return;
   }
 

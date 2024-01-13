@@ -27,11 +27,15 @@
     "@types/express-session": "^1.17.10",
     "base-64": "^1.0.0",
     "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "dotenv": "^16.3.1",
     "mysql2": "^3.6.5",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "sequelize": "^6.35.1",
     "sequelize-typescript": "^2.1.6",
+    "shell-quote": "^1.8.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

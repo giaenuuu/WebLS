@@ -1,35 +1,45 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UserInput } from 'src/user/user.input.model';
 import { User } from 'src/user/user.model';
-import { authConfig } from 'src/globals';
 import { InjectModel } from '@nestjs/sequelize';
-import * as base64 from 'base-64';
 import * as crypto from 'crypto';
+import { UserInput } from 'src/user/user-input.dto';
 
 @Injectable()
 export class AuthService {
   constructor(@InjectModel(User) private userModel: typeof User) {}
 
-  public async createUser(userInput: UserInput) {
+  public async createUser(userInput: UserInput, res) {
     const userExists = await this.userModel.findOne({
       where: { username: userInput.username },
     });
 
     if (userExists) {
-      throw new HttpException(
-        `cannot create user with username: ${userInput.username}`,
-        HttpStatus.CONFLICT,
-      );
+      res.status(409).json({
+        message: `User with username '${userInput.username}' already exists`,
+        error: 'Conflict',
+        statusCode: '409',
+      });
+      return;
     }
 
     const salt = this.generateSalt();
     const hash = this.hashPassword(userInput.password, salt);
 
-    this.userModel.create({
-      username: userInput.username,
-      password_salt: salt,
-      password_hash: hash,
-    });
+    try{
+      this.userModel.create({
+        username: userInput.username,
+        password_salt: salt,
+        password_hash: hash,
+      });
+    }
+    catch (errors) {
+      res.status(500).json({
+        message: `A unknown error occured while creating the user with username '${userInput.username}'`,
+        error: 'Internal Server Error',
+        statusCode: '500'
+      });
+      return;
+    }
   }
 
   public async authenticateUser(userInput: UserInput): Promise<User> {
