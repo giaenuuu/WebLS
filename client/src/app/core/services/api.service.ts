@@ -8,7 +8,7 @@ import { Observable, catchError } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = '/api/';
+  private baseUrl = '/api';
 
   constructor(private http: HttpClient) {}
 
