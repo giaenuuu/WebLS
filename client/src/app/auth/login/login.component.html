@@ -1,0 +1,23 @@
+<form class="w-full h-screen flex flex-col justify-center items-center">
+  <h1 class="text-4xl font-bold mb-12">Login</h1>
+
+  <div class="form-control w-full max-w-96 mb-2">
+    <input
+      type="text"
+      placeholder="Username"
+      class="input input-bordered w-full"
+      [formControl]="username"
+    />
+  </div>
+
+  <div class="form-control w-full max-w-96 mb-5">
+    <input
+      type="password"
+      placeholder="Password"
+      class="input input-bordered w-full"
+      [formControl]="password"
+    />
+  </div>
+
+  <button class="btn btn-primary w-full max-w-96">Login</button>
+</form>
