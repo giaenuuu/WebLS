@@ -5,9 +5,10 @@ import { RouterModule } from '@angular/router';
 import { AuthRoutingModule } from './auth-routing.module';
 import { AuthService } from './auth.service';
 import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginComponent, LogoutComponent],
   imports: [CommonModule, ReactiveFormsModule, AuthRoutingModule, RouterModule],
   providers: [AuthService],
 })

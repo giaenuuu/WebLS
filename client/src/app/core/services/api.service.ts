@@ -49,6 +49,8 @@ export class ApiService {
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
+    if (error.statusCode == 401) {
+    }
     return Promise.reject(error.message || error);
   }
 }

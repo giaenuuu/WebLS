@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { User } from 'src/user/user.model';
 import { InjectModel } from '@nestjs/sequelize';
 import * as crypto from 'crypto';
 import { UserInput } from 'src/user/user-input.dto';
+import { User } from 'src/user/user.model';
 
 @Injectable()
 export class AuthService {
@@ -25,18 +25,17 @@ export class AuthService {
     const salt = this.generateSalt();
     const hash = this.hashPassword(userInput.password, salt);
 
-    try{
+    try {
       this.userModel.create({
         username: userInput.username,
         password_salt: salt,
         password_hash: hash,
       });
-    }
-    catch (errors) {
+    } catch (errors) {
       res.status(500).json({
         message: `A unknown error occured while creating the user with username '${userInput.username}'`,
         error: 'Internal Server Error',
-        statusCode: '500'
+        statusCode: '500',
       });
       return;
     }
