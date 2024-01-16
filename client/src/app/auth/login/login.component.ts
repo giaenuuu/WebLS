@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(['filesystem']);
+      this.router.navigate(['file-explorer']);
     }
   }
 
@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.authService.setAuthenticated();
             this.username.reset();
             this.password.reset();
-            this.router.navigate(['filesystem']);
+            this.router.navigate(['file-explorer']);
           },
           error: (error) => {
             this.authService.setUnauthenticated();

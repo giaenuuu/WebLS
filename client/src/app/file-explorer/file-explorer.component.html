@@ -1,0 +1,25 @@
+
+<div class="my-6 flex items-center">
+    <button [disabled]="isOnBasePath" class="btn mr-3" (click)="navigateBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-up-left"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg> Back</button>
+    <ul class="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box">
+        <li><a>Item 1</a></li>
+        <li><a>Item 2</a></li>
+        <li><a>Item 3</a></li>
+    </ul>
+</div>
+
+
+<div class="grid grid-cols-4 gap-5">
+    <div *ngFor="let object of currentLocationData" class="card card-compact w-full bg-base-300 shadow-md" [ngClass]="{'cursor-pointer': object.type === 1}" (click)="nagivateInto(object)">
+        <div class="flex flex-col justify-center items-center p-6">
+            <img *ngIf="object.type === 0" src="assets/file.svg" class="w-12">
+            <img *ngIf="object.type === 1" src="assets/folder.svg" class="w-12">
+            <img *ngIf="object.type === 2" src="assets/play.svg" class="w-12">
+
+            <h2 class="text-lg">{{object.name}}</h2>
+
+            <p>Test</p>
+        </div>
+    </div>
+</div>

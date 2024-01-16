@@ -20,7 +20,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.authService.authenticated$
       .pipe(takeUntil(this.destroy$))
       .subscribe((isAuth) => {
-        console.log(isAuth);
         this.showNavbar = isAuth;
       });
   }

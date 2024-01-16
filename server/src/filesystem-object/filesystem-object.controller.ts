@@ -27,11 +27,7 @@ export class FilesystemObjectController {
         const filesystemObjects =
           await this.filesystemObjectService.getFileSystemObjects(body);
 
-        res.status(200).json({
-          filesystemObjects,
-          message: 'Request successful',
-          statusCode: '200',
-        });
+        res.status(200).json(filesystemObjects);
       } catch (err) {
         res.status(500).json({
           message: 'A unknown error occured while performing the request',
