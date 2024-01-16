@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
 import { CoreModule } from './core/core.module';
-import { FilesystemModule } from './filesystem/filesystem.module';
+import { FileExplorerModule } from './file-explorer/file-explorer.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,7 +15,7 @@ import { FilesystemModule } from './filesystem/filesystem.module';
     AppRoutingModule,
     CoreModule,
     AuthModule,
-    FilesystemModule,
+    FileExplorerModule,
     RouterModule,
   ],
   providers: [],
