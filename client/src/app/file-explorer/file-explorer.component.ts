@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, skip, take, takeUntil } from 'rxjs';
 import { FileExplorerService } from './file-explorer.service';
 import { FilesystemObject } from './models/filesystem-object-view.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -69,7 +69,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
       });
 
     this.currentLocation
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroy$), skip(1))
       .subscribe((currentLocation) => {
         this.fileExplorerService
           .getPathContent(
