@@ -1,5 +1,9 @@
 <div class="my-6 flex items-center">
-  <button [disabled]="isOnBasePath" class="btn mr-3" (click)="navigateBack()">
+  <button
+    [disabled]="isOnBasePath"
+    class="btn bg-base-300 mr-3"
+    (click)="navigateBack()"
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -20,7 +24,7 @@
 
   <form
     [formGroup]="filterForm!"
-    class="bg-base-200 rounded-box w-full px-5 py-2"
+    class="bg-base-300 rounded-box w-full px-5 py-2"
   >
     <ul class="flex items-center gap-8">
       <li class="flex items-center">
@@ -59,9 +63,13 @@
       <img *ngIf="object.type === 1" src="assets/folder.svg" class="w-12" />
       <img *ngIf="object.type === 2" src="assets/play.svg" class="w-12" />
 
-      <h2 class="text-lg">{{ object.name }}</h2>
-
-      <p>Test</p>
+      <p class="text-lg">{{ object.name }}</p>
+      <p class="text-sm font-mono">
+        {{ object.lastModifiedOn | date : "dd MMM yyyy HH:mm" }}
+      </p>
+      <p class="text-sm font-mono">
+        {{ object.size / 1000 | number : "1.0-0" }} KB
+      </p>
     </div>
   </div>
 </div>
