@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { exec } from 'child_process';
 import { validateOrReject } from 'class-validator';
 import { FilesystemObjectInput, Sorting } from './filesystem-object-input.dto';
@@ -16,21 +16,21 @@ dotenv.config({ path: '.env.local' });
 export class FilesystemObjectService {
   public async isRequestBodyValid(
     filesystemObjectInput: FilesystemObjectInput,
-    res
-  ) : Promise<boolean> {
+    res,
+  ): Promise<boolean> {
     try {
       await validateOrReject(filesystemObjectInput);
     } catch (errors) {
       res.status(400).json({
         message: 'Invalid request body',
         error: 'Bad Request',
-        statusCode: '400'
+        statusCode: '400',
       });
       return false;
     }
 
     const basePath = process.env.LOCAL_PATH_HOME_DIR;
-    const blackList = ['./', '../', '..', ";", "//", "#", "\\", "'", `"`, "`" ];
+    const blackList = ['./', '../', '..', ';', '//', '#', '\\', "'", `"`, '`'];
     if (
       !filesystemObjectInput.path.startsWith(basePath) ||
       blackList.some((item) => filesystemObjectInput.path.includes(item))
@@ -38,7 +38,7 @@ export class FilesystemObjectService {
       res.status(400).json({
         message: 'Invalid path',
         error: 'Bad Request',
-        statusCode: '400'
+        statusCode: '400',
       });
       return false;
     }
@@ -51,7 +51,7 @@ export class FilesystemObjectService {
       res.status(400).json({
         message: `Path doesn't exist`,
         error: 'Bad Request',
-        statusCode: '400'
+        statusCode: '400',
       });
       return false;
     }
