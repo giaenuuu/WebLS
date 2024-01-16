@@ -6,11 +6,22 @@ Das Projekt WebLs zielt darauf hin, den Windows-File Explorer mithilfe des "ls" 
 
 ## Login
 
-Um einen Benutzer erfolgreich anzumelden, sucht der Server mittels ORM und SQL den Benutzer mit dem Benutzernamen, welcher der Benutzer eingegeben hat, aus der Datenbank. Wenn der Benutzer gefunden wurde, wird zum eingegebenen Passwort das Salt, welches auch in der Datenbank unter dem Benutzer gespeichert ist, hinzugefügt und anschliessend mit `sha256` gehasht. Zum Schluss wird überprüft, ob der Hash in der Datenbank und der eben erstellt übereinstimmen und anhand dieser Information wird im Anschluss, bei einer Übereinstimmung das Login erfolgen. Sollte es nicht übereinstimmen oder einer der vorherigen Schritte einen Fehler aufweisen, wird eine Fehlermeldung zurückgegeben und im Frontend (Client) werden die Eingabefelder zurückgesetzt. <br>
-SQL-Injektion z.B. beim Passwort wird durch das ORM `Sequalize`, welches wir verwenden, verhindert.
+Um einen Benutzer erfolgreich anzumelden, sucht der Server mittels ORM und SQL den Benutzer mit dem Benutzernamen, welcher der Benutzer eingegeben hat, aus der Datenbank. Wenn der Benutzer gefunden wurde, wird zum eingegebenen Passwort das Salt, welches auch in der Datenbank unter dem Benutzer gespeichert ist, hinzugefügt und anschliessend mit `sha256` gehasht. Zum Schluss wird überprüft, ob der Hash in der Datenbank und der eben erstellt übereinstimmen und anhand dieser Information wird im Anschluss, bei einer Übereinstimmung das Login erfolgen. Sollte es nicht übereinstimmen oder einer der vorherigen Schritte einen Fehler aufweisen, wird eine Fehlermeldung zurückgegeben und im Frontend (Client) werden die Eingabefelder zurückgesetzt.
+<br><br>
+SQL-Injektion z.B. beim Passwort wird durch das ORM `Sequalize`, welches wir verwenden, verhindert.<br>
 XSS wird automatisch von Angular verhindert, sofern man als Entwickler nicht [innerHtml] verwendet.
 
 ## Registrierung
+
+Die Registrierung der Benutzer folgt klaren Kriterien, um die Sicherheit der Benutzer-Accounts sicherzustellen. <br>
+Der Name muss mindestens 4 Zeichen lang sein und darf nur alphabetische Zeichen enthalten, egal ob gross oder klein.
+Das Passwort muss mindestens 8 Zeichen lang sein, mindestens einen Kleinbuchstaben, einen Grossbuchstaben, eine Nummer und eines dieser Sonderzeichen (!@#$%^&\*()\_+) enthalten.
+
+Sind diese Kriterien erfüllt, wird der Benutzer anhand der [Passwortspeicherung](#passwortspeicherung) in der Datenbank erstellt und dem Client wird der entsprechende Erfolg mitgeteilt.
+
+<br><br>
+SQL-Injektion wird durch das ORM `Sequalize`, welches wir verwenden, verhindert.<br>
+XSS wird automatisch von Angular verhindert, sofern man als Entwickler nicht [innerHtml] verwendet.
 
 ## Session
 
@@ -21,7 +32,7 @@ Sessions werden nach einem erfolgreichen Login (Benutzername und Passwort) ausge
 Der LS-Befehl wird im Backend als sogenanntes Data-Transfer-Object (DTO) erwartet, welches als Erstes bei einer Anfrage auf korrekte Typisierung überprüft und allenfalls bereits einen Fehler wirft. <br>
 Dies hat den Vorteil, dass bei fixen Datentypen wie z.B. Boolean's oder Enum's bereits keine Kommando-Injektion mehr möglich ist. Das DTO ist somit bereits bis auf den Pfad (path), welcher "plain" Text ist, validiert. <br>
 Um diesen zu validieren, muss der Pfad mit dem fest programmierten Anfang "/home/{homedir}" übereinstimmen und darf keine Zeichen der selbst definierten Blacklist enthalten, wie z. B. "../" oder ";". <br>
-Danach wird der Pfad mittels des "shell-quote" `Node.js`Moduls "escaped", um sicherzustellen, dass der Pfad, falls er immer noch schädliche Zeichen beinhalten sollte,"unschädlich" gemacht wird.
+Danach wird der Pfad mittels des "shell-quote" `Node.js`Moduls "escaped", um sicherzustellen, dass der Pfad, falls er immer noch schädliche Zeichen beinhalten sollte, "unschädlich" gemacht wird.
 Final wird mithilfe des vorinstallierten "file system" (fs) Moduls von `Node.js` überprüft, ob der Pfad, welcher mit "ls" aufgerufen werden soll, überhaupt existiert.
 <br><br>
 Im Anschluss wird aus dem jetzt komplett validierten DTO das Systemkommando erstellt. Ein Beispiel dafür wäre "cd {path};ls -FlXar --full-time".
