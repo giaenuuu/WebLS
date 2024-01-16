@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Request,
   Response,
@@ -88,6 +89,19 @@ export class AuthController {
 
     this.authService.createUser(userInput, res);
     return;
+  }
+
+  @Get('verify')
+  async verify(@Request() req, @Response() res) {
+    const requestSession = this.sessionService.getSessionFromRequest(req);
+
+    if (requestSession && this.sessionService.getSession(requestSession)) {
+      // Return the existing session without creating a new one
+      res.status(200).json({ message: 'Session already exists' });
+      return;
+    } else {
+      res.status(401).json({ message: 'No session found.' });
+    }
   }
 
   @Post('logout')
