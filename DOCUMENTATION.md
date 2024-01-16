@@ -14,7 +14,7 @@ XSS wird automatisch von Angular verhindert, sofern man als Entwickler nicht [in
 ## Registrierung
 
 Die Registrierung der Benutzer folgt klaren Kriterien, um die Sicherheit der Benutzer-Accounts sicherzustellen. <br>
-Der Name muss mindestens 4 Zeichen lang sein und darf nur alphabetische Zeichen enthalten, egal ob gross oder klein.
+Der Name muss mindestens 4 Zeichen lang sein und darf nur alphabetische Zeichen enthalten, egal ob gross oder klein. <br>
 Das Passwort muss mindestens 8 Zeichen lang sein, mindestens einen Kleinbuchstaben, einen Grossbuchstaben, eine Nummer und eines dieser Sonderzeichen (!@#$%^&\*()\_+) enthalten.
 
 Sind diese Kriterien erfüllt, wird der Benutzer anhand der [Passwortspeicherung](#passwortspeicherung) in der Datenbank erstellt und dem Client wird der entsprechende Erfolg mitgeteilt.
