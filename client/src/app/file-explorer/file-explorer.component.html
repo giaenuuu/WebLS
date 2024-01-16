@@ -67,7 +67,7 @@
       <p class="text-sm font-mono">
         {{ object.lastModifiedOn | date : "dd MMM yyyy HH:mm" }}
       </p>
-      <p class="text-sm font-mono">
+      <p *ngIf="object.type !== 1" class="text-sm font-mono">
         {{ object.size / 1000 | number : "1.0-0" }} KB
       </p>
     </div>
