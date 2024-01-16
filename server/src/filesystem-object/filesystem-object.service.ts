@@ -77,7 +77,7 @@ export class FilesystemObjectService {
 
       return this.bashOutputToFilesystemObjectView(stdout);
     } catch (error) {
-      throw '';
+      throw new Error(error);
     }
   }
 

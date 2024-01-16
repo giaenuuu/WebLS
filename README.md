@@ -17,6 +17,10 @@ Welcome to the WebLS project repository for the [GIBB](https://gibb.ch/) Module 
 
 ## Run Project
 
+- Install MySQL
+  - create a Database with a name by your choice
+  - create a User and authorize it to the db you've created beforehand
+- adjust the name of the File `.env.example` located at `./WebLs/server` to `.env.local` and fill in the missing information marked in between curly brackets (delete the '{}' as well 😉)
 - `npm install` in `./WebLS/server` and `./WebLS/client`
 - `npm run start` to run the server `./WebLS/server`
 - `npm start` to run the frontend `./WebLS/client`

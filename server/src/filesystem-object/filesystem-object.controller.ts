@@ -38,6 +38,7 @@ export class FilesystemObjectController {
           error: 'Internal Server Error',
           statusCode: '500',
         });
+        throw new Error(err);
       }
     }
   }
@@ -47,6 +48,7 @@ export class FilesystemObjectController {
   async getBasePath(@Response() res): Promise<void> {
     const basePath = process.env.LOCAL_PATH_HOME_DIR;
 
+    //throw new Error(error); //Test error log ^^
     return res.status(200).json({
       basePath,
       message: 'Request successful',
