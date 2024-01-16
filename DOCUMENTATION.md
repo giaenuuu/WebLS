@@ -34,7 +34,7 @@ Auch hier gilt, dass wenn ein Fehler oder etwas Invalides auftreten sollte, der 
 
 Die zwei Log-Dateien `log.txt` und `errors.txt` enthalten die entsprechenden Logs, welche der Server (Backend) während seiner Laufzeit ausgibt. Dabei wird zwischen "normalen" Logs (debug, log, warn, verbose) und "error" Logs (error, fatal) unterschieden. Ein Log kann vom Server selbst oder durch "manuelle" Programmierung z.B. bei einem Fehler in einer Controller/Server-Methode erstellt werden. Neu geschriebene Logs werden mithilfe des vorinstallierten "file system" (fs) Moduls von `Node.js` direkt in die jeweilige Log-Datei geschrieben.
 
-## Passwortsicherung
+## Passwortspeicherung
 
 Passwörter werden in der Applikation nur für die Benutzerauthentifizierung gebraucht und werden somit auch nur in der User-Tabelle der MySQL-Datenbank gespeichert. Zur sicheren Passwortverwahrung werden Passwörter aber nicht als "plain" Text in die Datenbank gespeichert, sondern werden zuerst mit einem sogenannten Salt versehen, welcher aus einer GUID besteht und pro Benutzer anders ist, und im Anschluss noch mit `sha256` gehasht, bevor diese mit dem dazugehörigen Salt in der Datenbank persistiert werden.
 
