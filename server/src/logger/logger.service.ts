@@ -1,4 +1,4 @@
-import { Injectable, LogLevel, Logger, LoggerService } from '@nestjs/common';
+import { Injectable, Logger, LoggerService } from '@nestjs/common';
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env.local' });
@@ -29,10 +29,6 @@ export class CustomLogger implements LoggerService {
 
   fatal?(message: any, ...optionalParams: any[]) {
     this.logToErrorFile(message);
-  }
-
-  setLogLevels?(levels: LogLevel[]) {
-    return;
   }
 
   private logToLogFile(message: any, context?: string) {

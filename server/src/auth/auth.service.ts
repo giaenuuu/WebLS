@@ -22,11 +22,35 @@ export class AuthService {
       return;
     }
 
+    var nameRegex = /^[a-zA-Z]+$/;
+    if (userInput.username.length < 4 || !nameRegex.test(userInput.username)) {
+      res.status(400).json({
+        message: 'Invalid username',
+        error: 'Bad Request',
+        statusCode: '400',
+      });
+      return;
+    }
+
+    var passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]+$/;
+    if (
+      userInput.password.length < 8 ||
+      !passwordRegex.test(userInput.password)
+    ) {
+      res.status(400).json({
+        message: 'Invalid password',
+        error: 'Bad Request',
+        statusCode: '400',
+      });
+      return;
+    }
+
     const salt = this.generateSalt();
     const hash = this.hashPassword(userInput.password, salt);
 
     try {
-      this.userModel.create({
+      await this.userModel.create({
         username: userInput.username,
         password_salt: salt,
         password_hash: hash,
