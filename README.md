@@ -15,6 +15,8 @@
 
 Welcome to the WebLS project repository for the [GIBB](https://gibb.ch/) Module 183.<br> This application aims to recreate the file explorer experience using the simple bash command "ls" on the web.
 
+### [German Module Documentation](./DOCUMENTATION.md)
+
 ## Run Project
 
 - Install MySQL

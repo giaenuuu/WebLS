@@ -105,9 +105,13 @@ export class AuthController {
   }
 
   @Post('logout')
-  @UseGuards(AuthGuard)
   async logout(@Request() req: any, @Response() res): Promise<void> {
     const session = this.sessionService.getSessionFromRequest(req);
+    if (!session) {
+      res.status(200).json({ message: 'Logout successful' });
+      return;
+    }
+
     this.sessionService.removeSession(session);
     res.clearCookie(authConfig.sessionCookieName);
     res.status(200).json({ message: 'Logout successful' });
