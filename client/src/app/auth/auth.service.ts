@@ -20,6 +20,14 @@ export class AuthService {
     return res;
   }
 
+  public register(username: string, password: string): Observable<any> {
+    const res = this.apiService.post<any, Login>('auth/register', {
+      username: username,
+      password: password,
+    });
+    return res;
+  }
+
   public verifyAuthentication() {
     const res = this.apiService.get<any>('auth/verify');
 
