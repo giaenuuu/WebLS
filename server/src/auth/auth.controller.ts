@@ -88,7 +88,6 @@ export class AuthController {
     }
 
     await this.authService.createUser(userInput, res);
-    res.status(200).json({});
     return;
   }
 

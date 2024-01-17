@@ -55,6 +55,7 @@ export class AuthService {
         password_salt: salt,
         password_hash: hash,
       });
+      res.status(200).json({});
     } catch (errors) {
       res.status(500).json({
         message: `A unknown error occured while creating the user with username '${userInput.username}'`,
