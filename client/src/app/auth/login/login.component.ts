@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   OnInit,
   Renderer2,
@@ -8,7 +9,7 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, combineLatest, map, takeUntil } from 'rxjs';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   protected username = new FormControl('');
   protected password = new FormControl('');
+  protected buttonDisabled = true;
 
   private destroy$ = new Subject<void>();
 
@@ -32,13 +34,32 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(['file-explorer']);
+      this.router.navigate(['filesystem']);
     }
+    combineLatest([this.username.valueChanges, this.password.valueChanges])
+      .pipe(
+        map(([usernameValue, passwordValue]) => {
+          // Check if either username or password is empty
+          return usernameValue?.trim() === '' || passwordValue?.trim() === '';
+        })
+      )
+      .subscribe((isEmpty) => {
+        // Update buttonDisabled based on whether either is empty
+        this.buttonDisabled = isEmpty;
+      });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  @HostListener('document:keydown.enter', ['$event'])
+  handleEnterKey(event: KeyboardEvent): void {
+    // Check if the Enter key was pressed while the focus is inside the form
+    if (event.target instanceof HTMLInputElement) {
+      this.login();
+    }
   }
 
   login() {
@@ -54,7 +75,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.authService.setAuthenticated();
             this.username.reset();
             this.password.reset();
-            this.router.navigate(['file-explorer']);
+            this.router.navigate(['filesystem']);
           },
           error: (error) => {
             this.authService.setUnauthenticated();

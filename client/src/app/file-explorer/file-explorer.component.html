@@ -51,6 +51,8 @@
   </form>
 </div>
 
+<p class="text-lg font-bold mb-6 text-center">{{ currentLocation | async }}</p>
+
 <div class="grid grid-cols-4 gap-5">
   <div
     *ngFor="let object of currentLocationData"
