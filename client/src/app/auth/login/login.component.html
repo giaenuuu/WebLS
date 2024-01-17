@@ -3,7 +3,6 @@
 
   <div class="form-control w-full max-w-96 mb-2">
     <input
-      autocomplete="off"
       type="text"
       placeholder="Username"
       class="input input-bordered w-full"
@@ -13,7 +12,6 @@
 
   <div class="form-control w-full max-w-96 mb-5">
     <input
-      autocomplete="off"
       type="password"
       placeholder="Password"
       class="input input-bordered w-full"
@@ -25,6 +23,7 @@
     type="button"
     (click)="login()"
     class="btn btn-primary w-full max-w-96"
+    [disabled]="buttonDisabled"
   >
     Login
   </button>
