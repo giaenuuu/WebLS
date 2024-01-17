@@ -6,7 +6,8 @@
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "ssl": "ng serve -o --ssl --ssl-key ./localhost-key.pem --ssl-cert ./localhost.pem --proxy-config proxy.conf.json"
   },
   "private": true,
   "dependencies": {
