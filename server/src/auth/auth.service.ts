@@ -33,7 +33,7 @@ export class AuthService {
     }
 
     var passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]+$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+-])[A-Za-z\d!@#$%^&*()_+-]+$/;
     if (
       userInput.password.length < 8 ||
       !passwordRegex.test(userInput.password)
