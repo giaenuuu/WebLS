@@ -1,3 +1,4 @@
 export const authConfig = {
-    saltRounds: 10,
-}
+  sessionCookieName: 'webls_session',
+  sessionExpiresAfterMS: 60 * 60 * 1000, // 1 hour
+};

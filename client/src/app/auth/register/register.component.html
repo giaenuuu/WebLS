@@ -1,0 +1,64 @@
+<form class="mt-12 w-full h-full flex flex-col justify-center items-center">
+  <h1 class="text-4xl font-bold mb-12">Register</h1>
+
+  <div class="form-control w-full max-w-96 mb-2">
+    <input
+      autocomplete="off"
+      type="text"
+      placeholder="Username"
+      class="input input-bordered w-full"
+      [formControl]="username"
+    />
+  </div>
+
+  <div class="form-control w-full max-w-96 mb-2">
+    <input
+      autocomplete="off"
+      type="password"
+      placeholder="Password"
+      class="input input-bordered w-full"
+      [formControl]="password"
+    />
+  </div>
+
+  <div class="form-control w-full max-w-96 mb-5">
+    <input
+      autocomplete="off"
+      type="password"
+      placeholder="Verify Password"
+      class="input input-bordered w-full"
+      [formControl]="passwordVerify"
+    />
+  </div>
+
+  <button
+    type="button"
+    (click)="login()"
+    class="btn btn-primary w-full max-w-96"
+  >
+    Login
+  </button>
+
+  <div
+    #error
+    role="alert"
+    class="alert alert-error w-full max-w-96 mt-5 hidden"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="stroke-current shrink-0 h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    <div>
+      <p class="mb-4" *ngFor="let error of errors">{{ error }}</p>
+    </div>
+  </div>
+</form>
