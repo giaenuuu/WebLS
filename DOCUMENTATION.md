@@ -49,3 +49,5 @@ Die zwei Log-Dateien `log.txt` und `errors.txt` enthalten die entsprechenden Log
 Passwörter werden in der Applikation nur für die Benutzerauthentifizierung gebraucht und werden somit auch nur in der User-Tabelle der MySQL-Datenbank gespeichert. Zur sicheren Passwortverwahrung werden Passwörter aber nicht als "plain" Text in die Datenbank gespeichert, sondern werden zuerst mit einem sogenannten Salt versehen, welcher aus einer GUID besteht und pro Benutzer anders ist, und im Anschluss noch mit `sha256` gehasht, bevor diese mit dem dazugehörigen Salt in der Datenbank persistiert werden.
 
 ## Verschlüsselung
+
+Für die Verschlüsselung zwischen dem Frontend (Client) und dem Backend (Server) haben wir ein Self-Signed-Certificate gebraucht. Das Zertifikat haben wir mithilfe von `certil` und `mkcert` erstellt und haben den Key mit "--ssl-key" und das Zertifikat mit "--ssl-cert" beim Build-Prozess von Angular mitgegeben. Das Start-Kommando des Frontends sieht wie folgt aus: `ng serve -o --ssl --ssl-key ./localhost-key.pem --ssl-cert ./localhost.pem --proxy-config proxy.conf.json`
